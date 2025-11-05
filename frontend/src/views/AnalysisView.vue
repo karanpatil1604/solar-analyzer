@@ -167,8 +167,8 @@
         <div class="comparison-grid">
           <div class="comparison-header">
             <div>Factor</div>
-            <div>{{ comparisonSites[0].site_name }}</div>
-            <div>{{ comparisonSites[1].site_name }}</div>
+            <div>{{ comparisonSites[0]?.site_name }}</div>
+            <div>{{ comparisonSites[1]?.site_name }}</div>
           </div>
 
           <div class="comparison-row" v-for="factor in comparisonFactors" :key="factor.key">
@@ -212,12 +212,14 @@ const selectedSite1 = ref<number | null>(null)
 const selectedSite2 = ref<number | null>(null)
 const comparisonSites = ref<AnalysisResult[]>([])
 
+type CustomAnalysisKey = keyof typeof customAnalysis.value;
+
 const weightControls = [
-  { key: 'solar_weight', label: 'Solar Irradiance' },
-  { key: 'area_weight', label: 'Area' },
-  { key: 'grid_weight', label: 'Grid Distance' },
-  { key: 'slope_weight', label: 'Slope' },
-  { key: 'infra_weight', label: 'Infrastructure' },
+  { key: 'solar_weight' as CustomAnalysisKey, label: 'Solar Irradiance' },
+  { key: 'area_weight' as CustomAnalysisKey, label: 'Area' },
+  { key: 'grid_weight' as CustomAnalysisKey, label: 'Grid Distance' },
+  { key: 'slope_weight' as CustomAnalysisKey, label: 'Slope' },
+  { key: 'infra_weight' as CustomAnalysisKey, label: 'Infrastructure' },
 ]
 
 const comparisonFactors = [
@@ -309,7 +311,8 @@ const updateComparison = () => {
   }
 }
 
-const getSiteFactorValue = (site: AnalysisResult, factor: string) => {
+const getSiteFactorValue = (site: AnalysisResult | undefined, factor: string) => {
+  if (!site) return '-'
   const value = (site as any)[factor]
   return typeof value === 'number' ? value : value
 }

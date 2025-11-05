@@ -65,5 +65,6 @@ class SuitabilityCalculator:
             for key in scores
             if key in weights
         )
+        total = max(0.0, min(100.0, total))
         
         return round(total, 2), scores

@@ -30,6 +30,8 @@ export interface AnalysisResult {
   total_suitability_score: number
   analysis_timestamp: string
   parameters_snapshot: any
+  land_type: string
+  area_sqm: number
 }
 
 export interface AnalysisParameter {

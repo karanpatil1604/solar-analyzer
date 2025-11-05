@@ -14,14 +14,14 @@
         <label>Region:</label>
         <span>{{ site.region }}</span>
       </div>
-      <!-- <div class="detail-item">
+      <div class="detail-item">
         <label>Land Type:</label>
         <span>{{ site?.land_type }}</span>
       </div>
       <div class="detail-item">
         <label>Area:</label>
         <span>{{ site?.area_sqm?.toLocaleString?.() || 'N/A' }} m²</span>
-      </div> -->
+      </div>
       <div class="detail-item">
         <label>Solar Irradiance:</label>
         <span>{{ site.solar_irradiance_score || '0.0' }} kWh/m²/day</span>
