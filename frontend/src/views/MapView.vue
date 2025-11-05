@@ -51,7 +51,13 @@
     </div>
 
     <div class="map-container">
-      <SiteMap :sites="filteredSites" :loading="loading" @site-selected="onSiteSelected" />
+      <SiteMap
+        v-if="filteredSites && filteredSites.length"
+        :key="filteredSites.length + '-' + route.query.site"
+        :sites="filteredSites"
+        :loading="loading"
+        @site-selected="onSiteSelected"
+      />
     </div>
 
     <!-- Selected Site Panel -->
@@ -97,6 +103,7 @@ const updateMap = () => {
 }
 
 const onSiteSelected = (site: AnalysisResult) => {
+  if (!site.latitude || !site.longitude) return
   selectedSite.value = site
   // Update URL without navigation
   router.replace({

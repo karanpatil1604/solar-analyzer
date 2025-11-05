@@ -1,7 +1,7 @@
 <template>
   <div class="site-map">
-    <div v-if="loading" class="map-loading">Loading map...</div>
-    <div v-else class="map-container">
+    <div v-show="loading" class="map-loading">Loading map...</div>
+    <div v-show="!loading" class="map-container">
       <l-map
         ref="map"
         :zoom="zoom"
@@ -30,8 +30,8 @@
           <l-tooltip>
             <div class="site-tooltip">
               <strong>{{ site.site_name }}</strong>
-              <br>Score: {{ formatScore(site.total_suitability_score) }}
-              <br>Region: {{ site.region }}
+              <br />Score: {{ formatScore(site.total_suitability_score) }} <br />Region:
+              {{ site.region }}
             </div>
           </l-tooltip>
         </l-marker>
@@ -49,65 +49,66 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { LMap, LTileLayer, LMarker, LIcon, LTooltip } from '@vue-leaflet/vue-leaflet';
-import 'leaflet/dist/leaflet.css';
-import type { AnalysisResult } from '@/types';
-import SiteDetails from './SiteDetails.vue';
+import { ref, computed, onMounted } from 'vue'
+import { LMap, LTileLayer, LMarker, LIcon, LTooltip } from '@vue-leaflet/vue-leaflet'
+import 'leaflet/dist/leaflet.css'
+import type { AnalysisResult } from '@/types'
+import SiteDetails from './SiteDetails.vue'
 
 interface Props {
-  sites: AnalysisResult[];
-  loading?: boolean;
+  sites: AnalysisResult[]
+  loading?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  loading: false
-});
-const formatScore = (score: any) => (typeof score === 'number' ? score.toFixed(2) : 'N/A')
-
+  loading: false,
+})
+const formatScore = (score: any) => {
+  return typeof score == 'number' ? Number(score).toFixed(2) : Number(score)
+}
 const emit = defineEmits<{
   siteSelected: [site: AnalysisResult]
-}>();
+}>()
 
-const map = ref();
-const zoom = ref(7);
-const center = ref<[number, number]>([11.0, 77.0]); // Center on Tamil Nadu
-const selectedSite = ref<AnalysisResult | null>(null);
+const map = ref()
+const zoom = ref(7)
+const center = ref<[number, number]>([11.0, 77.0]) // Center on Tamil Nadu
+const selectedSite = ref<AnalysisResult | null>(null)
 
 const sitesWithScores = computed(() =>
-  props.sites.filter(site => site.total_suitability_score != null)
-);
+  props.sites.filter((site) => site.total_suitability_score != null),
+)
 
 const getMarkerIcon = (score: number) => {
-  if (score >= 80) return '/marker-excellent.png';
-  if (score >= 60) return '/marker-good.png';
-  if (score >= 40) return '/marker-fair.png';
-  if (score >= 20) return '/marker-poor.png';
-  return '/marker-very-poor.png';
-};
+  if (score >= 80) return '/marker-excellent.png'
+  if (score >= 60) return '/marker-good.png'
+  if (score >= 40) return '/marker-fair.png'
+  if (score >= 20) return '/marker-poor.png'
+  return '/marker-very-poor.png'
+}
 
 const onMapReady = () => {
-  console.log('Map is ready');
-};
+  console.log('Map is ready')
+}
 
 const centerUpdated = (center: [number, number]) => {
-  console.log('Center updated:', center);
-};
+  console.log('Center updated:', center)
+}
 
 const zoomUpdated = (zoom: number) => {
-  console.log('Zoom updated:', zoom);
-};
+  console.log('Zoom updated:', zoom)
+}
 
 const onMarkerClick = (site: AnalysisResult) => {
-  selectedSite.value = site;
-  emit('siteSelected', site);
-};
+  selectedSite.value = site
+  emit('siteSelected', site)
+}
 
 // Create marker icons (you can replace with actual images)
 onMounted(() => {
   // In a real app, you'd have actual marker images
   // For now, we'll use colored circles generated programmatically
-});
+})
 </script>
 
 <style scoped>

@@ -237,7 +237,9 @@ const totalWeight = computed(() => {
   }, 0)
   return Math.round(total)
 })
-const formatScore = (score: any) => (typeof score === 'number' ? score.toFixed(2) : 'N/A')
+const formatScore = (score: any) => {
+  return typeof score == 'number' ? Number(score).toFixed(2) : Number(score)
+}
 const updateWeights = () => {
   // Normalize weights if total is not 100%
   if (totalWeight.value !== 100) {
@@ -282,7 +284,7 @@ const getScoreClass = (score: number) => {
   return 'very-poor'
 }
 
-const formatFactorName = (factor: string) => {
+const formatFactorName = (factor: any) => {
   const names: { [key: string]: string } = {
     solar: 'Solar Irradiance',
     area: 'Area',
@@ -309,7 +311,7 @@ const updateComparison = () => {
 
 const getSiteFactorValue = (site: AnalysisResult, factor: string) => {
   const value = (site as any)[factor]
-  return typeof value === 'number' ? value.toFixed(1) : value
+  return typeof value === 'number' ? value : value
 }
 
 onMounted(() => {

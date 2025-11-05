@@ -14,17 +14,17 @@
         <label>Region:</label>
         <span>{{ site.region }}</span>
       </div>
-      <div class="detail-item">
+      <!-- <div class="detail-item">
         <label>Land Type:</label>
-        <span>{{ site.land_type }}</span>
+        <span>{{ site?.land_type }}</span>
       </div>
       <div class="detail-item">
         <label>Area:</label>
-        <span>{{ site.area_sqm.toLocaleString() }} m²</span>
-      </div>
+        <span>{{ site?.area_sqm?.toLocaleString?.() || 'N/A' }} m²</span>
+      </div> -->
       <div class="detail-item">
         <label>Solar Irradiance:</label>
-        <span>{{ site.solar_irradiance_kwh }} kWh/m²/day</span>
+        <span>{{ site.solar_irradiance_score || '0.0' }} kWh/m²/day</span>
       </div>
     </div>
 
@@ -36,35 +36,35 @@
           <div class="breakdown-bar">
             <div class="breakdown-fill" :style="{ width: site.solar_irradiance_score + '%' }"></div>
           </div>
-          <div class="breakdown-value">{{ site.solar_irradiance_score.toFixed(1) }}</div>
+          <div class="breakdown-value">{{ site?.solar_irradiance_score }}</div>
         </div>
         <div class="breakdown-item">
           <div class="breakdown-label">Area</div>
           <div class="breakdown-bar">
             <div class="breakdown-fill" :style="{ width: site.area_score + '%' }"></div>
           </div>
-          <div class="breakdown-value">{{ site.area_score.toFixed(1) }}</div>
+          <div class="breakdown-value">{{ site.area_score }}</div>
         </div>
         <div class="breakdown-item">
           <div class="breakdown-label">Grid Distance</div>
           <div class="breakdown-bar">
             <div class="breakdown-fill" :style="{ width: site.grid_distance_score + '%' }"></div>
           </div>
-          <div class="breakdown-value">{{ site.grid_distance_score.toFixed(1) }}</div>
+          <div class="breakdown-value">{{ site.grid_distance_score }}</div>
         </div>
         <div class="breakdown-item">
           <div class="breakdown-label">Slope</div>
           <div class="breakdown-bar">
             <div class="breakdown-fill" :style="{ width: site.slope_score + '%' }"></div>
           </div>
-          <div class="breakdown-value">{{ site.slope_score.toFixed(1) }}</div>
+          <div class="breakdown-value">{{ site.slope_score }}</div>
         </div>
         <div class="breakdown-item">
           <div class="breakdown-label">Infrastructure</div>
           <div class="breakdown-bar">
             <div class="breakdown-fill" :style="{ width: site.infrastructure_score + '%' }"></div>
           </div>
-          <div class="breakdown-value">{{ site.infrastructure_score.toFixed(1) }}</div>
+          <div class="breakdown-value">{{ site.infrastructure_score }}</div>
         </div>
       </div>
     </div>
@@ -79,7 +79,9 @@ interface Props {
 }
 
 defineProps<Props>()
-const formatScore = (score: any) => (typeof score === 'number' ? score.toFixed(2) : 'N/A')
+const formatScore = (score: any) => {
+  return typeof score == 'number' ? Number(score).toFixed(2) : Number(score)
+}
 
 const getScoreClass = (score: number) => {
   if (score >= 80) return 'excellent'

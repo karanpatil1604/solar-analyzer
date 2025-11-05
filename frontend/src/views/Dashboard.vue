@@ -161,9 +161,13 @@ const updateFilters = () => {
   sitesStore.updateFilters(filters.value)
 }
 
-const formatScore = (score: any) => (typeof score === 'number' ? score.toFixed(2) : 'N/A')
+const formatScore = (score: any) => {
+  return typeof score == 'number' ? Number(score).toFixed(2) : Number(score)
+}
 
-const viewOnMap = (site: AnalysisResult) => {
+const viewOnMap = async (site: AnalysisResult) => {
+  await sitesStore.fetchSites()
+  sitesStore.currentAnalysis = site
   router.push({
     path: '/map',
     query: { site: site.site.toString() },
