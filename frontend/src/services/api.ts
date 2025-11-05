@@ -8,7 +8,7 @@ import type {
   SuitabilityWeights,
 } from '../types/index'
 
-const API_BASE_URL = 'http://136.111.17.239:8000/api'
+const API_BASE_URL = '/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
