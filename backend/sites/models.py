@@ -25,7 +25,63 @@ class Site(models.Model):
             models.Index(fields=['region']),
             models.Index(fields=['land_type']),
         ]
-
+    
+    def calculate_suitability_scores(self, weights=None):
+        """Calculate suitability scores for this site"""
+        from .utils import SuitabilityCalculator
+        
+        if weights is None:
+            # Get default weights from parameters
+            try:
+                from .models import AnalysisParameter
+                weights = {
+                    'solar': float(AnalysisParameter.objects.get(parameter_name='solar_irradiance_weight').weight_value),
+                    'area': float(AnalysisParameter.objects.get(parameter_name='area_weight').weight_value),
+                    'grid': float(AnalysisParameter.objects.get(parameter_name='grid_distance_weight').weight_value),
+                    'slope': float(AnalysisParameter.objects.get(parameter_name='slope_weight').weight_value),
+                    'infrastructure': float(AnalysisParameter.objects.get(parameter_name='infrastructure_weight').weight_value),
+                }
+            except AnalysisParameter.DoesNotExist:
+                weights = {
+                    'solar': 0.35,
+                    'area': 0.25,
+                    'grid': 0.20,
+                    'slope': 0.15,
+                    'infrastructure': 0.05
+                }
+        
+        calculator = SuitabilityCalculator()
+        site_data = {
+            'solar_irradiance_kwh': float(self.solar_irradiance_kwh),
+            'area_sqm': self.area_sqm,
+            'grid_distance_km': float(self.grid_distance_km),
+            'slope_degrees': float(self.slope_degrees),
+            'road_distance_km': float(self.road_distance_km)
+        }
+        
+        total_score, breakdown = calculator.calculate(site_data, weights)
+        
+        # Create or update analysis result
+        analysis_result, created = AnalysisResult.objects.update_or_create(
+            site=self,
+            defaults={
+                'solar_irradiance_score': breakdown['solar'],
+                'area_score': breakdown['area'],
+                'grid_distance_score': breakdown['grid'],
+                'slope_score': breakdown['slope'],
+                'infrastructure_score': breakdown['infrastructure'],
+                'total_suitability_score': total_score,
+                'parameters_snapshot': weights
+            }
+        )
+        
+        return analysis_result
+    def get_latest_score(self):
+        """Get the latest analysis result for this site"""
+        try:
+            return AnalysisResult.objects.filter(site=self).latest('analysis_timestamp')
+        except AnalysisResult.DoesNotExist:
+            return None
 class AnalysisParameter(models.Model):
     param_id = models.AutoField(primary_key=True)
     parameter_name = models.CharField(max_length=100, unique=True)
@@ -61,3 +117,14 @@ class AnalysisResult(models.Model):
             models.Index(fields=['site']),
             models.Index(fields=['analysis_timestamp']),
         ]
+    
+    def get_score_breakdown(self):
+        """Return score breakdown as dictionary"""
+        return {
+            'solar_irradiance': float(self.solar_irradiance_score),
+            'area': float(self.area_score),
+            'grid_distance': float(self.grid_distance_score),
+            'slope': float(self.slope_score),
+            'infrastructure': float(self.infrastructure_score),
+            'total': float(self.total_suitability_score)
+        }

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # 3rd party
     "corsheaders",
     "rest_framework",
+    "django_filters",
 
     # local apps
     "sites",
