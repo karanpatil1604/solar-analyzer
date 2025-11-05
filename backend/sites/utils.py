@@ -61,8 +61,9 @@ class SuitabilityCalculator:
         }
         
         total = sum(
-            scores[key] * weights[key] 
-            for key in scores.keys()
+            float(scores[key]) * float(weights[key])
+            for key in scores
+            if key in weights
         )
         
         return round(total, 2), scores
