@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+    "node": "^20.x"
   },
   "scripts": {
     "dev": "vite",
@@ -22,7 +22,6 @@
     "leaflet": "^1.9.4",
     "pinia": "^3.0.3",
     "vue": "^3.5.22",
-    "vue-chart-3": "^3.1.8",
     "vue-chartjs": "^5.3.3",
     "vue-router": "^4.6.3"
   },
