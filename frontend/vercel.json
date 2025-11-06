@@ -1,13 +1,9 @@
 {
-  "version": 2,
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "http://136.111.17.239:8000/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
+    "version": 2,
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "http://136.111.17.239:8000/api/$1"
+        }
+    ]
 }
