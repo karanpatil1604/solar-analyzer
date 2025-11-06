@@ -1,8 +1,10 @@
 {
-    "rewrites": [
-        {
-            "source": "/api/:path*",
-            "destination": "http://136.111.17.239:8000/api/:path*"
-        }
-    ]
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "http://136.111.17.239:8000/api/:path*",
+      "has": [],
+      "missing": []
+    }
+  ]
 }
